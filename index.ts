@@ -1,28 +1,22 @@
 import express, { Request, Response } from 'express';
-import { evaluate } from 'mathjs';
+// import { evaluate } from 'mathjs';
+import { evaluate } from './main.ts';
 
+
+//Start express application
 const app = express();
 const port = 3000;
 
+//Parses incoming JSON requests and makes the requests available in req.body
 app.use(express.json());
-
-function isValidFormula(formula: string): boolean {
-    const allowedCharacters = /^[0-9+\-*/^(). x]*$/;
-    return allowedCharacters.test(formula);
-  }
-
 
 
 app.post('/evaluate', (req: Request, res: Response) => {
 
-    const { formula, variables } = req.body;
-
-    if (!isValidFormula(formula)){
-        return res.status(400).json({ succes:false, error: "Invalid formula"});
-    }
+    const { formula } = req.body;
 
     try{ 
-        const result = evaluate(formula, variables);
+        const result = evaluate(formula);
 
         res.json({ success: true, result });
     }catch(error) {
